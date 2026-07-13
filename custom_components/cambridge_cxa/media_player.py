@@ -8,7 +8,7 @@ https://github.com/lievencoghe/cambridge_audio_cxa
 import logging
 import urllib.request
 import voluptuous as vol
-from serial import Serial
+from serial import serial_for_url
 
 from homeassistant.components.media_player import (
     PLATFORM_SCHEMA,
@@ -191,7 +191,7 @@ class CambridgeCXADevice(MediaPlayerEntity):
         self._sound_mode_list = SOUND_MODES.copy()
         self._state = STATE_OFF
         self._cxnhost = cxnhost
-        self._serial = Serial(device, baudrate=9600, timeout=2, bytesize=8, parity="N", stopbits=1)
+        self._serial = serial_for_url(device, baudrate=9600, timeout=2, bytesize=8, parity="N", stopbits=1)
         
     def update(self):
         self._pwstate = self._command_with_reply(AMP_CMD_GET_PWSTATE)

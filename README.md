@@ -24,7 +24,26 @@ media_player:
 Restart Home Assistant, and see you have a new media_player entity for your CXA.
 
 
-## Indirect serial connection
+## Indirect serial connection over the network (no socat needed)
+
+If your CXA's serial port is exposed over the network by ser2net (or any raw
+TCP serial bridge), you can point the component straight at it with a
+[pyserial URL](https://pyserial.readthedocs.io/en/latest/url_handlers.html)
+— no socat or virtual serial device required. This is the easiest option on
+Home Assistant OS, where running a persistent socat service is awkward.
+
+```
+media_player:
+  - platform: cambridge_cxa
+    device: socket://<IP of the serial bridge>:5000
+    name: CXA
+    type: CXA61 or CXA81
+```
+
+Set up ser2net on the bridge device as described in the next section, then
+skip everything about socat.
+
+## Indirect serial connection via socat
 
 You'll need to install ser2net on the Raspberry Pi where you have the serial connection to your Cambridge CXA, so the serial port can be accessed over the network.
 
