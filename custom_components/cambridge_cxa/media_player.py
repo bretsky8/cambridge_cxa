@@ -21,6 +21,7 @@ from homeassistant.const import (
     CONF_NAME,
     CONF_SLAVE,
     CONF_TYPE,
+    CONF_UNIQUE_ID,
     STATE_OFF,
     STATE_ON,
 )
@@ -76,9 +77,10 @@ DEVICE_CLASS = "receiver"
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_DEVICE): cv.string,
-        vol.Required(CONF_TYPE): cv.string,      
+        vol.Required(CONF_TYPE): cv.string,
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
         vol.Optional(CONF_SLAVE): cv.string,
+        vol.Optional(CONF_UNIQUE_ID): cv.string,
     }
 )
 
@@ -159,6 +161,7 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
     name = config.get(CONF_NAME)
     cxatype = config.get(CONF_TYPE)
     cxnhost = config.get(CONF_SLAVE)
+    unique_id = config.get(CONF_UNIQUE_ID)
 
     if device is None:
         _LOGGER.error("No serial port defined in configuration.yaml for Cambridge CXA")
@@ -168,14 +171,15 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
         _LOGGER.error("No CXA type found in configuration.yaml file. Possible values are CXA61, CXA81")
         return
 
-    add_devices([CambridgeCXADevice(hass, device, name, cxatype, cxnhost)])
+    add_devices([CambridgeCXADevice(hass, device, name, cxatype, cxnhost, unique_id)])
 
 
 class CambridgeCXADevice(MediaPlayerEntity):
-    def __init__(self, hass, device, name, cxatype, cxnhost):
+    def __init__(self, hass, device, name, cxatype, cxnhost, unique_id=None):
         _LOGGER.debug("Setting up Cambridge CXA")
         self._hass = hass
         self._device = device
+        self._attr_unique_id = unique_id
         self._mediasource = "#04,01,00"
         self._speakersactive = ""
         self._muted = AMP_REPLY_MUTE_OFF
