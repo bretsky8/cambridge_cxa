@@ -43,6 +43,20 @@ media_player:
 Set up ser2net on the bridge device as described in the next section, then
 skip everything about socat.
 
+Notes for the socket:// setup:
+
+- ser2net with `kickolduser: true` allows one client at a time, and Home
+  Assistant holds the connection permanently. If you test the port manually
+  (for example with `nc <bridge IP> 5000`), you will bump Home Assistant off
+  the bridge — reload the integration or restart Home Assistant afterwards.
+- If the connection fails, test the bridge first with
+  `nc <bridge IP> 5000` from another machine: type a command from the
+  Cambridge serial protocol (ending with carriage return) and check for a
+  reply. If that works, the problem is on the Home Assistant side.
+- Make sure any firewall on the bridge allows the Home Assistant host to
+  reach the TCP port, and never expose the port beyond your trusted LAN —
+  a raw serial bridge has no authentication.
+
 ## Indirect serial connection via socat
 
 You'll need to install ser2net on the Raspberry Pi where you have the serial connection to your Cambridge CXA, so the serial port can be accessed over the network.
