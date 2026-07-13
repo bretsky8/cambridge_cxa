@@ -23,6 +23,13 @@ media_player:
 
 Restart Home Assistant, and see you have a new media_player entity for your CXA.
 
+Optionally add `unique_id: <any stable string>` (for example
+`unique_id: cxa81_living_room`) to the platform config. This registers the
+media player in Home Assistant's entity registry, so you can rename its
+entity ID and customize it from the UI. Works for both the direct and
+network setups. Pick a value once and don't change it afterwards — the
+registry uses it to recognize the entity across restarts and config changes.
+
 
 ## Indirect serial connection over the network (no socat needed)
 
